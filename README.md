@@ -132,13 +132,13 @@ Repita o processo para criar a tabela de rotas privada:
    ssh -i "sua-chave.pem" ec2-user@<private-ip-instance>
 #### 5.3. Montar o Sistema de Arquivos EFS
 Execute os seguintes comandos dentro do terminal da instância:
+   ```bash
+   # Monta o sistema de arquivos
+   sudo mount -t efs -o tls fs-0867e43994669bc80:/ /mnt/efs
 
-  ```bash
-  # Monta o sistema de arquivos
-  sudo mount -t efs -o tls fs-0867e43994669bc80:/ /mnt/efs
-
-  # Verifica se a montagem está correta
-  df -h
+   # Verifica se a montagem está correta
+   df -h
+   ```
 ### 6. Criando o Arquivo docker-compose.yml
 
 #### 6.1. Criar o arquivo docker-compose.yml
@@ -184,6 +184,63 @@ networks:
 
 volumes:
   db_data:  # Volume para persistir os dados do banco de dados
+```
+
+## 7. Iniciar o Docker Compose
+Navegue até o diretório onde o arquivo `docker-compose.yml` está localizado.  
+Execute o seguinte comando para iniciar os contêineres:
+
+```plaintext
+sudo docker-compose up -d
+```
+
+## 8. Configuração do Load Balancer
+
+### 8.1. Criar Security Group para o Load Balancer
+Crie um novo security group `lb-sg` com as seguintes regras de entrada:
+
+- **HTTP (80)** de qualquer lugar (0.0.0.0/0)
+- **HTTPS (443)** de qualquer lugar (0.0.0.0/0)
+
+### 8.2. Criar o Application Load Balancer
+No console EC2, crie um novo Application Load Balancer:
+
+- **Nome:** projeto-2-compass-lb
+- **Esquema:** Voltado para internet
+- **VPC:** projeto-2-compass-vpc
+- **Mapeamentos:** Selecione as duas subnets públicas
+- **Security Group:** lb-sg
+
+Configure o Listener e o Target Group:
+
+- **Listener:** HTTP:80
+- **Target Group:**
+  - **Nome:** projeto-2-compass-tg
+  - **Protocolo:** HTTP
+  - **Porta:** 80
+  - **Tipo de alvo:** Instâncias
+  - **Health check path:** /
+
+Registre as instâncias EC2 no Target Group.
+
+## 9. Acessando o WordPress
+
+Após configurar o Application Load Balancer e registrar suas instâncias EC2 no Target Group, você pode acessar o WordPress através do DNS do Load Balancer.
+
+1. No Console da AWS, navegue até a seção **EC2**.
+2. Clique em **Load Balancers** no menu lateral.
+3. Selecione o Load Balancer que você criou (projeto-2-compass-lb).
+4. Copie o **DNS Name** exibido na parte inferior da página.
+
+5. Abra um navegador e cole o DNS Name copiado na barra de endereços:
+
+6. Você deverá ver a tela de instalação do WordPress. Siga as instruções na tela para configurar seu site WordPress.
+
+
+
+
+
+    
 
 
 
