@@ -100,7 +100,7 @@ Após criar o Launch Configuration, clique em **Auto Scaling Groups** e em **Cre
 Configure as seguintes opções:  
 **Nome:** asg-wp  
 **VPC:** vpc-wp  
-**Subnets:** selecione as subnets privadas (wp-privada-01 e wp-privada-02).  
+**Subnets:** selecione as subnets privadas.  
 Defina as políticas de escalabilidade conforme desejado.
 
 ### 6. Configurando o Load Balancer
