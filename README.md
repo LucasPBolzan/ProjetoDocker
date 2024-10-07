@@ -202,7 +202,7 @@ networks:
     driver: bridge
 
 volumes:
-  db_data:  # Volume para persistir os dados do banco de dados
+  db_data: 
 
 ```
 
