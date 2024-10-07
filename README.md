@@ -219,7 +219,7 @@ Após configurar o Application Load Balancer e registrar suas instâncias EC2 no
 
 1. No Console da AWS, navegue até a seção **EC2**.
 2. Clique em **Load Balancers** no menu lateral.
-3. Selecione o Load Balancer que você criou (**projeto-2-compass-lb**).
+3. Selecione o Load Balancer que você criou.
 4. Copie o **DNS Name** exibido na parte inferior da página.
 5. Abra um navegador e cole o **DNS Name** copiado na barra de endereços.
 
