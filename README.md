@@ -34,22 +34,23 @@ Para a segunda sub-rede privada:
 **Zona de Disponibilidade:** us-east-1b  
 **Bloco CIDR:** 10.0.4.0/24  
 
-### 2. Criando Tabelas de Rotas
-#### 2.1. Tabela de Rotas Pública
-Vá para Tabelas de Rotas e clique em Criar Tabela de Rotas.  
-**Nomeie a tabela como:** wp-public-route e associe-a à VPC projeto-2-compass-vpc.  
-Clique em Criar Tabela de Rotas.  
-Após criada, vá até a seção de Rotas e adicione a seguinte rota:  
+### 2. Configuração de Tabelas de Rotas
+#### 2.1. Criação da Tabela de Rotas Pública
+Acesse a seção de Tabelas de Rotas e clique em "Criar Tabela de Rotas".  
+**Denomine a tabela como:** rt-wp-public e vincule-a à VPC correspondente.  
+Clique em "Criar Tabela de Rotas".  
+Após a criação, dirija-se à seção de Rotas e adicione a seguinte entrada:  
 **Destino:** 0.0.0.0/0  
-**Destino do Alvo:** Internet Gateway  
-**Internet Gateway:** selecione o criado.  
-Vá para a aba de Associações de Sub-rede e associe as sub-rede públicas wp-publica-01 e wp-publica-02.
+**Alvo:** Internet Gateway  
+**Internet Gateway:** escolha o que foi criado anteriormente.  
+Acesse a aba de Associações de Sub-rede e conecte as sub-redes públicas.
 
-#### 2.2. Tabela de Rotas Privada
-Repita o processo para criar a tabela de rotas privada:  
-**Nome:** wp-route-private  
-**Não adicione rota para Internet.**  
-Associe as sub-redes privadas a essa tabela de rotas.
+#### 2.2. Criação da Tabela de Rotas Privada
+Repita o procedimento para configurar a tabela de rotas privada:  
+**Nome:** rt-wp-private  
+**Não adicione uma rota para Internet.**  
+Vincule as sub-redes privadas a esta tabela de rotas.
+
 
 ### 3. Criando Conexões de Rede
 #### 3.1. Internet Gateway (IGW)
