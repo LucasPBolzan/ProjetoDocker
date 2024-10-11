@@ -112,7 +112,7 @@ services:
     environment:
       WORDPRESS_DB_HOST: databasewp.ch44cooycc7p.us-east-1.rds.amazonaws.com:3306
       WORDPRESS_DB_USER: admin
-      WORDPRESS_DB_PASSWORD: senha123
+      WORDPRESS_DB_PASSWORD: ********
       WORDPRESS_DB_NAME: databasewp
 EOF
 
