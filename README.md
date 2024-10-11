@@ -127,14 +127,20 @@ sudo docker-compose up -d
 2. **Docker Compose**:
    - O arquivo `docker-compose.yml` é criado automaticamente e configura o container WordPress, utilizando o EFS para armazenar os arquivos estáticos e conectando-se ao RDS para o banco de dados.
 
-## Configuração do Load Balancer
+## 7. Configuração do Application Load Balancer
 
-1. **Criação do Load Balancer (Classic)**:
-   - Crie um Classic Load Balancer (CLB) e configure-o para rotear o tráfego para as instâncias EC2.
-   - Defina a porta de saída da aplicação como `80` ou `8080`.
+### 7.1 Application Load Balancer
+- **Nome**: WordPressALB, voltado para a Internet, HTTP na porta 80.
+- **Zonas de Disponibilidade**: PublicSubnet1, PublicSubnet2.
+- **Grupo de Segurança**: ALB-SG.
 
-2. **Configuração do DNS**:
-   - Configure o DNS para apontar para o Load Balancer, garantindo que o serviço WordPress esteja acessível através de uma URL e não por um IP público.
+### 7.2 Grupo de Destino
+- **Nome**: WordPressTG, tipo Instância, HTTP na porta 80.
+- **Verificações de Integridade**: Caminho `/`, limiar de saúde 5, limiar de falha 2, timeout 5s, intervalo 30s.
+
+### 7.3 Registro de Alvos
+- Instâncias registradas automaticamente pelo Auto Scaling Group.
+
 
 ## Finalização
 
