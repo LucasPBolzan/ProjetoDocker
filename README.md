@@ -29,11 +29,11 @@ Este documento descreve o processo de deploy de uma aplicação WordPress utiliz
 
 ## Grupos de Segurança
 
-1. **Load Balancer (ALB-SG)**
+1. **Load Balancer (LB-SG)**
    - **Entrada**: HTTP (TCP, porta 80) de qualquer IP (0.0.0.0/0).
    - **Saída**: Todo tráfego permitido.
 
-2. **Instâncias EC2 (EC2-SG)**
+2. **Instâncias EC2 (INSTANCE-SG)**
    - **Entrada**:
      - HTTP (TCP, porta 80) do ALB-SG.
      - NFS (TCP, porta 2049) do EFS-SG.
@@ -132,15 +132,11 @@ sudo docker-compose up -d
 ### 7.1 Application Load Balancer
 - **Nome**: WordPressALB, voltado para a Internet, HTTP na porta 80.
 - **Zonas de Disponibilidade**: PublicSubnet1, PublicSubnet2.
-- **Grupo de Segurança**: ALB-SG.
+- **Grupo de Segurança**: LB-SG.
 
 ### 7.2 Grupo de Destino
 - **Nome**: WordPressTG, tipo Instância, HTTP na porta 80.
 - **Verificações de Integridade**: Caminho `/`, limiar de saúde 5, limiar de falha 2, timeout 5s, intervalo 30s.
-
-### 7.3 Registro de Alvos
-- Instâncias registradas automaticamente pelo Auto Scaling Group.
-
 
 ## Finalização
 
