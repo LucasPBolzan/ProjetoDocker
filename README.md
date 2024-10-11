@@ -1,4 +1,5 @@
-# Documentação de Deploy do WordPress com Docker e AWS
+# Trabalho de Deploy do WordPress com Docker e AWS
+![Arquitetura:]("C:\Users\lbolz\Desktop\arquitetura_compass.png")
 
 ## Sumário
 1. [Introdução](#introdução)
@@ -9,7 +10,6 @@
 6. [Configuração das Instâncias EC2 com Docker e EFS](#configuração-das-instâncias-ec2-com-docker-e-efs)
 7. [Configuração do Load Balancer](#configuração-do-load-balancer)
 8. [Finalização](#finalização)
-9. [Referências](#referências)
 
 ## Introdução
 Este documento descreve o processo de deploy de uma aplicação WordPress utilizando Docker, um banco de dados MySQL no Amazon RDS, e o armazenamento de arquivos estáticos no AWS EFS (Elastic File System). Além disso, o serviço é balanceado através de um Load Balancer (LB). 
@@ -28,16 +28,25 @@ Este documento descreve o processo de deploy de uma aplicação WordPress utiliz
 4. **NAT Gateway**:
    - Crie um NAT Gateway nas subnets públicas para permitir que as instâncias nas subnets privadas acessem a internet.
 
-## Criação dos Grupos de Segurança
+## Grupos de Segurança
 
-1. **Security Group para a aplicação WordPress**:
-   - Abra a porta `80` e `8080` para o tráfego HTTP, mas restrinja o acesso para apenas o Load Balancer.
+1. **Load Balancer (ALB-SG)**
+   - **Entrada**: HTTP (TCP, porta 80) de qualquer IP (0.0.0.0/0).
+   - **Saída**: Todo tráfego permitido.
 
-2. **Security Group para o Banco de Dados RDS**:
-   - Permita apenas o tráfego das instâncias EC2 (subnets privadas).
+2. **Instâncias EC2 (EC2-SG)**
+   - **Entrada**:
+     - HTTP (TCP, porta 80) do ALB-SG.
+     - NFS (TCP, porta 2049) do EFS-SG.
+   - **Saída**: Todo tráfego permitido.
 
-3. **Security Group para o Load Balancer**:
-   - Abra a porta `80` para acesso público e permita o tráfego de entrada e saída.
+3. **Banco de Dados RDS (RDS-SG)**
+   - **Entrada**: MySQL/Aurora (TCP, porta 3306) do EC2-SG.
+   - **Saída**: Todo tráfego permitido.
+
+4. **EFS (EFS-SG)**
+   - **Entrada**: NFS (TCP, porta 2049) do EC2-SG.
+   - **Saída**: Todo tráfego permitido.
 
 ## Criação do Banco de Dados RDS
 
@@ -60,10 +69,9 @@ Este documento descreve o processo de deploy de uma aplicação WordPress utiliz
 ## Configuração das Instâncias EC2 com Docker e EFS
 
 1. **Criação das Instâncias EC2**:
-   - Lance instâncias EC2 nas subnets privadas e use o script de `user_data` abaixo para configurar automaticamente o ambiente:
-
-```bash
-#!/bin/bash
+   - Lance instâncias EC2 nas subnets privadas e use o script de `user_data` para configurar automaticamente o ambiente.
+``` bash
+ #!/bin/bash
 
 # Atualizando o sistema, bem como instalando o Docker e o EFS
 sudo yum update -y
@@ -115,3 +123,24 @@ echo "fs-03fea74ec7e0948bb.efs.us-east-1.amazonaws.com:/ efs nfs defaults 0 0" |
 # Subindo o container do Docker Compose
 cd /home/ec2-user
 sudo docker-compose up -d
+```
+     
+2. **Docker Compose**:
+   - O arquivo `docker-compose.yml` é criado automaticamente e configura o container WordPress, utilizando o EFS para armazenar os arquivos estáticos e conectando-se ao RDS para o banco de dados.
+
+## Configuração do Load Balancer
+
+1. **Criação do Load Balancer (Classic)**:
+   - Crie um Classic Load Balancer (CLB) e configure-o para rotear o tráfego para as instâncias EC2.
+   - Defina a porta de saída da aplicação como `80` ou `8080`.
+
+2. **Configuração do DNS**:
+   - Configure o DNS para apontar para o Load Balancer, garantindo que o serviço WordPress esteja acessível através de uma URL e não por um IP público.
+
+## Finalização
+
+1. **Verificação do Serviço**:
+   - Acesse o Load Balancer via browser e verifique se a página de login do WordPress está disponível.
+
+
+
