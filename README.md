@@ -1,5 +1,4 @@
 # Trabalho de Deploy do WordPress com Docker e AWS
-![Arquitetura:]("C:\Users\lbolz\Desktop\arquitetura_compass.png")
 
 ## Sumário
 1. [Introdução](#introdução)
